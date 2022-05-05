@@ -31,14 +31,32 @@ public class HashMap_ {
 		Node nn = new Node(K, V);
 		Node head = buckets.get(bucket_num);
 		nn.next = head;
-		buckets.set(bucket_num,nn);
+		buckets.set(bucket_num, nn);
 		size++;
-		double load_factor = (size *1.0)/buckets.size();
-		if(load_factor>2) {
+		double load_factor = (size * 1.0) / buckets.size();
+		if (load_factor > 2) {
 //			rehash!!/
+			rehash();
 		}
-	
-				
+
+	}
+
+	private void rehash() {
+		// TODO Auto-generated method stub
+		ArrayList<Node> old_buckets = buckets;		
+		buckets = new ArrayList<>();
+		for (int i = 0; i < old_buckets.size()*2; i++) {
+			buckets.add(null);
+		}
+		
+		for(Node head : old_buckets){
+			Node temp = head;
+			while(temp!=null) {
+				put(temp.Key, temp.Value);
+				temp= temp.next;
+			}
+		}
+
 	}
 
 	public int get(String K) {

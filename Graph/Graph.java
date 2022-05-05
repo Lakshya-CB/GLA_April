@@ -3,6 +3,7 @@ package Graph;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
+import java.util.PriorityQueue;
 import java.util.Queue;
 
 public class Graph {
@@ -119,6 +120,7 @@ public class Graph {
 			}
 		}
 	}
+
 	public boolean isCycle() {
 		HashSet<Integer> Visited = new HashSet<>();
 		for (int V : map.keySet()) {
@@ -149,8 +151,9 @@ public class Graph {
 		}
 		return false;
 	}
+
 	public int num_Components() {
-		int numC =0;
+		int numC = 0;
 		HashSet<Integer> Visited = new HashSet<>();
 		for (int V : map.keySet()) {
 //				BFS!!!!!!
@@ -180,7 +183,47 @@ public class Graph {
 		}
 		return numC;
 	}
+
 	public boolean isTree() {
-		return isCycle()==false && num_Components()==0;
+		return isCycle() == false && num_Components() == 0;
+	}
+
+	class DijPair implements Comparable<DijPair> {
+		public DijPair(int src, int i) {
+			// TODO Auto-generated constructor stub
+			V = src;
+			CTR = i;
+		}
+
+		int V;
+		int CTR = 0;
+		public String toString() {
+			return this.V + " with cost "+ this.CTR;
+		}
+		@Override
+		public int compareTo(DijPair o) {
+			// TODO Auto-generated method stub
+			return this.CTR -o.CTR;
+		}
+	}
+
+	public void Dijkstra(int src) {
+		PriorityQueue<DijPair> PQ = new PriorityQueue<>();
+		HashSet<Integer> Visited = new HashSet<>();
+		PQ.add(new DijPair(src, 0));
+		while (!PQ.isEmpty()) {
+			DijPair temp = PQ.poll();
+			if(Visited.contains(temp.V)) {
+				continue;
+			}
+			System.out.println(temp);
+			Visited.add(temp.V);
+			for (int nbr : map.get(temp.V).keySet()) {
+				if (!Visited.contains(nbr)) {
+					int Edge_cost = map.get(temp.V).get(nbr);
+					PQ.add(new DijPair(nbr, temp.CTR + Edge_cost));
+				}
+			}
+		}
 	}
 }
